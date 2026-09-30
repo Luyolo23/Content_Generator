@@ -7,7 +7,7 @@
 import type { PackRequest } from "./concept-types";
 
 /** One place to change the model. */
-export const MODEL = "llama-3.3-70b-versatile";
+export const MODEL = "openai/gpt-oss-120b"; // available on Groq for this key
 export const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 
 export interface PromptVersion {
