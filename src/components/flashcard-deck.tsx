@@ -2,7 +2,10 @@ import { ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import type { Flashcard } from "@/lib/concept-types";
+
+const TINTS = ["bg-primary/15", "bg-teal/25", "bg-warm/15", "bg-success/15"];
 
 export function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
   const [index, setIndex] = useState(0);
@@ -27,7 +30,7 @@ export function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
         <span>
           Card {index + 1} of {cards.length}
         </span>
-        <span>Click the card to flip</span>
+        <span>Tap the card to flip</span>
       </div>
 
       <div className="flip-scene mt-4">
@@ -35,22 +38,27 @@ export function FlashcardDeck({ cards }: { cards: Flashcard[] }) {
           type="button"
           onClick={() => setFlipped((f) => !f)}
           aria-label={flipped ? "Show the question" : "Show the answer"}
-          className="flip-inner focus-visible:ring-ring block min-h-56 w-full cursor-pointer rounded-2xl focus-visible:ring-2 focus-visible:outline-none"
+          className="flip-inner focus-visible:ring-ring block min-h-64 w-full cursor-pointer rounded-[2rem] focus-visible:ring-2 focus-visible:outline-none"
           style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
         >
-          <span className="flip-face bg-brand flex min-h-56 w-full items-center justify-center rounded-2xl p-8 text-center">
-            <span className="font-display text-xl font-semibold text-primary-foreground">{card.front}</span>
+          <span
+            className={cn(
+              "flip-face flex min-h-64 w-full items-center justify-center rounded-[2rem] border border-border p-8 text-center shadow-lift",
+              TINTS[index % TINTS.length],
+            )}
+          >
+            <span className="font-display text-2xl font-semibold text-foreground">{card.front}</span>
           </span>
           <span
-            className="flip-face absolute inset-0 flex items-center justify-center rounded-2xl border border-border bg-card p-8 text-center"
+            className="flip-face absolute inset-0 flex items-center justify-center rounded-[2rem] border border-border bg-card p-8 shadow-lift text-center"
             style={{ transform: "rotateY(180deg)" }}
           >
-            <span className="text-base leading-relaxed text-card-foreground">{card.back}</span>
+            <span className="max-w-[60ch] text-lg leading-relaxed text-card-foreground">{card.back}</span>
           </span>
         </button>
       </div>
 
-      <div className="mt-5 flex items-center justify-center gap-3">
+      <div className="mt-6 flex items-center justify-center gap-3">
         <Button variant="outline" size="icon" onClick={() => move(-1)} aria-label="Previous card">
           <ChevronLeft className="size-4" aria-hidden />
         </Button>

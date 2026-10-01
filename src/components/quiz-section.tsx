@@ -61,11 +61,12 @@ export function QuizSection({ questions, topic, onComplete }: QuizSectionProps) 
   if (done) {
     const pct = Math.round((score / Math.max(pool.length, 1)) * 100);
     return (
-      <div className="animate-rise card-surface p-8 text-center">
-        <div className="bg-brand mx-auto flex size-16 items-center justify-center rounded-2xl">
-          <Trophy className="size-8 text-primary-foreground" aria-hidden />
+      <div className="animate-rise card-surface relative overflow-hidden p-8 text-center sm:p-10">
+        {pct >= 50 && <Confetti />}
+        <div className="bg-brand relative mx-auto flex size-20 items-center justify-center rounded-[40%_60%_55%_45%] shadow-lift">
+          <Trophy className="size-9 text-primary-foreground" aria-hidden />
         </div>
-        <h3 className="mt-5 text-2xl font-semibold">
+        <h3 className="relative mt-6 text-4xl font-semibold">
           {score} / {pool.length} correct
         </h3>
         <p className="mt-2 text-muted-foreground">
@@ -99,11 +100,11 @@ export function QuizSection({ questions, topic, onComplete }: QuizSectionProps) 
         </span>
         <span className="tabular-nums">Score {score}</span>
       </div>
-      <Progress value={progress} className="mt-3 h-1.5" />
+      <Progress value={progress} className="mt-3 h-2.5 rounded-full bg-muted" />
 
-      <h3 className="mt-6 text-xl leading-snug font-semibold">{current.question}</h3>
+      <h3 className="mt-6 max-w-[60ch] text-2xl leading-snug font-semibold">{current.question}</h3>
 
-      <div className="mt-5 space-y-3" role="group" aria-label="Answer options">
+      <div className="mt-6 grid gap-3 sm:grid-cols-2" role="group" aria-label="Answer options">
         {current.options.map((option, i) => {
           const isCorrect = i === current.correctIndex;
           const isPicked = selected === i;
@@ -116,9 +117,9 @@ export function QuizSection({ questions, topic, onComplete }: QuizSectionProps) 
               disabled={revealed}
               aria-pressed={isPicked}
               className={cn(
-                "flex w-full items-start gap-3 rounded-xl border p-4 text-left transition-all",
+                "flex min-h-16 w-full items-start gap-3 rounded-2xl border-2 bg-card p-4 text-left shadow-soft transition-all",
                 "focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-                !revealed && "border-border hover:border-primary hover:bg-muted/60",
+                !revealed && "border-border hover:-translate-y-0.5 hover:border-primary hover:shadow-lift",
                 revealed && isCorrect && "border-success bg-success/10",
                 revealed && isPicked && !isCorrect && "border-destructive bg-destructive/10",
                 revealed && !isCorrect && !isPicked && "border-border opacity-60",
@@ -126,7 +127,7 @@ export function QuizSection({ questions, topic, onComplete }: QuizSectionProps) 
             >
               <span
                 className={cn(
-                  "mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border text-xs font-semibold",
+                  "flex size-8 shrink-0 items-center justify-center rounded-full border-2 text-sm font-semibold",
                   revealed && isCorrect && "border-success bg-success text-success-foreground",
                   revealed &&
                     isPicked &&
@@ -135,23 +136,33 @@ export function QuizSection({ questions, topic, onComplete }: QuizSectionProps) 
                 )}
               >
                 {revealed && isCorrect ? (
-                  <Check className="size-3.5" aria-hidden />
+                  <Check className="size-4" aria-hidden />
                 ) : revealed && isPicked ? (
-                  <X className="size-3.5" aria-hidden />
+                  <X className="size-4" aria-hidden />
                 ) : (
                   String.fromCharCode(65 + i)
                 )}
               </span>
-              <span className="text-sm leading-relaxed">{option}</span>
+              <span className="pt-1 text-sm leading-relaxed sm:text-base">{option}</span>
             </button>
           );
         })}
       </div>
 
       {selected !== null && (
-        <div className="animate-rise mt-5 rounded-xl bg-muted p-4" role="status">
-          <p className="text-sm font-medium">
-            {selected === current.correctIndex ? "Correct" : "Not quite"}
+        <div
+          className={cn(
+            "animate-rise accent-left mt-5 rounded-2xl p-4",
+            selected === current.correctIndex ? "border-l-success bg-success/10" : "border-l-destructive bg-destructive/10",
+          )}
+          role="status"
+        >
+          <p className="flex items-center gap-2 text-sm font-semibold">
+            {selected === current.correctIndex ? (
+              <><Check className="size-4 text-success" aria-hidden /> Correct</>
+            ) : (
+              <><X className="size-4 text-destructive" aria-hidden /> Not quite</>
+            )}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">{current.explanation}</p>
           <Button variant="hero" className="mt-4" onClick={next}>
@@ -159,6 +170,27 @@ export function QuizSection({ questions, topic, onComplete }: QuizSectionProps) 
           </Button>
         </div>
       )}
+    </div>
+  );
+}
+
+const CONFETTI_TONES = ["bg-primary", "bg-teal", "bg-warm", "bg-success"];
+
+/** Gentle CSS confetti; hidden entirely when the user prefers reduced motion. */
+function Confetti() {
+  return (
+    <div className="pointer-events-none absolute inset-0" aria-hidden>
+      {Array.from({ length: 28 }, (_, i) => (
+        <span
+          key={i}
+          className={cn("confetti-piece", CONFETTI_TONES[i % CONFETTI_TONES.length])}
+          style={{
+            left: `${(i * 37) % 100}%`,
+            animationDelay: `${(i % 7) * 0.12}s`,
+            ["--drift" as string]: `${((i * 53) % 80) - 40}px`,
+          }}
+        />
+      ))}
     </div>
   );
 }
