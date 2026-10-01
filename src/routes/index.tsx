@@ -6,7 +6,10 @@ import { useEffect, useState } from "react";
 import { HistorySidebar } from "@/components/history-sidebar";
 import { PackSkeleton } from "@/components/pack-skeleton";
 import { PackView } from "@/components/pack-view";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { SmartImage } from "@/components/smart-image";
+import { IMAGES } from "@/lib/images";
 import { TopicForm } from "@/components/topic-form";
 import { Button } from "@/components/ui/button";
 import { generatePack } from "@/lib/concept.functions";
@@ -37,6 +40,8 @@ export const Route = createFileRoute("/")({
           "Enter any topic and get an AI learning pack: plain-language explanation, analogy, code, quiz, flashcards and a follow-up chat.",
       },
       { property: "og:title", content: "Concept Coach — Understand any concept, your way" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
         content:
@@ -133,31 +138,65 @@ function HomePage() {
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
-        {!pack && !busy && !error && (
-          <section className="mx-auto mb-10 max-w-3xl text-center">
-            <h1 className="text-4xl leading-tight font-semibold sm:text-5xl">
-              Understand <span className="text-brand">anything</span>, at your level
-            </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-              One topic in, a full study pack out: explanation, analogy, code, quiz, flashcards and a tutor
-              that keeps the conversation going.
-            </p>
+        {!pack && !busy && !error ? (
+          <section className="bg-hero-glow relative mb-12 grid items-center gap-10 rounded-[2.5rem] p-2 sm:p-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+            <div className="animate-rise">
+              <p className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground">
+                A study journal that explains back
+              </p>
+              <h1 className="mt-5 text-5xl leading-[1.02] font-semibold text-balance sm:text-6xl lg:text-7xl">
+                Understand <em className="text-warm not-italic">anything</em>, at your own pace.
+              </h1>
+              <p className="mt-5 max-w-[60ch] text-lg leading-relaxed text-muted-foreground">
+                One topic in, a full study pack out: explanation, analogy, code, quiz, flashcards and a tutor that
+                keeps the conversation going.
+              </p>
+              <div className="mt-8">
+                <TopicForm key="new" defaults={DEFAULT_REQUEST} loading={busy} onSubmit={generate} />
+              </div>
+            </div>
+
+            <div className="relative hidden h-[520px] lg:block" aria-hidden={false}>
+              <span className="absolute top-6 right-2 size-40 rounded-[60%_40%_55%_45%] bg-teal/30 blur-2xl" aria-hidden />
+              <span className="absolute bottom-10 left-0 size-44 rounded-[45%_55%_40%_60%] bg-primary/20 blur-2xl" aria-hidden />
+              <SmartImage
+                {...IMAGES.hero.notebook}
+                eager
+                className="animate-float absolute top-0 right-0 h-72 w-64 rounded-[2rem] shadow-lift [--r:3deg]"
+              />
+              <SmartImage
+                {...IMAGES.hero.studying}
+                eager
+                className="animate-float absolute top-36 left-0 h-80 w-60 rounded-[2rem] shadow-lift [--r:-3deg] [animation-delay:1.5s]"
+              />
+              <SmartImage
+                {...IMAGES.hero.plants}
+                className="animate-float absolute right-10 bottom-0 h-44 w-48 rounded-[50%_50%_2rem_2rem] shadow-lift [animation-delay:3s]"
+              />
+            </div>
+            <div className="grid grid-cols-3 gap-3 lg:hidden">
+              {[IMAGES.hero.notebook, IMAGES.hero.studying, IMAGES.hero.plants].map((img) => (
+                <SmartImage key={img.src} {...img} className="aspect-[3/4] rounded-3xl shadow-soft" />
+              ))}
+            </div>
           </section>
-        )}
+        ) : null}
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="space-y-8">
-            <TopicForm
-              key={request?.topic ?? "new"}
-              defaults={request ?? DEFAULT_REQUEST}
-              loading={busy}
-              onSubmit={generate}
-            />
+            {(pack || busy || error) && (
+              <TopicForm
+                key={request?.topic ?? "new"}
+                defaults={request ?? DEFAULT_REQUEST}
+                loading={busy}
+                onSubmit={generate}
+              />
+            )}
 
             {busy && <PackSkeleton />}
 
             {error && !busy && (
-              <div className="card-surface animate-rise p-8 text-center" role="alert">
+              <div className="card-surface animate-rise accent-left border-l-destructive p-8 text-center" role="alert">
                 <AlertCircle className="mx-auto size-10 text-destructive" aria-hidden />
                 <h2 className="mt-4 text-xl font-semibold">That didn't work</h2>
                 <p className="mt-2 text-muted-foreground">{error.message}</p>
@@ -193,6 +232,7 @@ function HomePage() {
           />
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

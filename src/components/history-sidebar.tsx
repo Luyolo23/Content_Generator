@@ -1,8 +1,10 @@
 import { Flame, GraduationCap, History, Search, Target, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 
+import { SmartImage } from "@/components/smart-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { IMAGES } from "@/lib/images";
 import type { HistoryEntry, Stats } from "@/lib/session-store";
 
 interface HistorySidebarProps {
@@ -29,24 +31,24 @@ export function HistorySidebar({ history, stats, activeId, onSelect, onDelete }:
 
   return (
     <aside className="space-y-5" aria-label="Your study session">
-      <section className="card-surface p-5">
-        <h2 className="font-display text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+      <section className="card-surface hover-lift p-5">
+        <h2 className="font-display text-lg font-semibold">
           Your progress
         </h2>
         <div className="mt-4 grid grid-cols-3 gap-3 text-center">
-          <div className="rounded-xl bg-muted p-3">
-            <Flame className="mx-auto size-4 text-warm" aria-hidden />
-            <p className="mt-1.5 text-xl font-semibold tabular-nums">{stats.streakDays}</p>
+          <div className="rounded-2xl bg-warm/15 p-3">
+            <Flame className={`mx-auto size-6 text-warm ${stats.streakDays > 0 ? "animate-float" : ""}`} aria-hidden />
+            <p className="mt-1.5 font-display text-2xl font-semibold tabular-nums">{stats.streakDays}</p>
             <p className="text-[11px] text-muted-foreground">day streak</p>
           </div>
-          <div className="rounded-xl bg-muted p-3">
-            <GraduationCap className="mx-auto size-4 text-primary" aria-hidden />
-            <p className="mt-1.5 text-xl font-semibold tabular-nums">{stats.topicsLearned}</p>
+          <div className="rounded-2xl bg-primary/15 p-3">
+            <GraduationCap className="mx-auto size-6 text-primary" aria-hidden />
+            <p className="mt-1.5 font-display text-2xl font-semibold tabular-nums">{stats.topicsLearned}</p>
             <p className="text-[11px] text-muted-foreground">topics</p>
           </div>
-          <div className="rounded-xl bg-muted p-3">
-            <Target className="mx-auto size-4 text-teal" aria-hidden />
-            <p className="mt-1.5 text-xl font-semibold tabular-nums">{avgScore === null ? "—" : `${avgScore}%`}</p>
+          <div className="rounded-2xl bg-teal/25 p-3">
+            <Target className="mx-auto size-6 text-accent-foreground" aria-hidden />
+            <p className="mt-1.5 font-display text-2xl font-semibold tabular-nums">{avgScore === null ? "—" : `${avgScore}%`}</p>
             <p className="text-[11px] text-muted-foreground">avg quiz</p>
           </div>
         </div>
@@ -65,8 +67,8 @@ export function HistorySidebar({ history, stats, activeId, onSelect, onDelete }:
       </section>
 
       <section className="card-surface p-5">
-        <h2 className="flex items-center gap-2 font-display text-sm font-semibold tracking-wide text-muted-foreground uppercase">
-          <History className="size-4" aria-hidden /> Past topics
+        <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
+          <History className="size-5 text-primary" aria-hidden /> Past topics
         </h2>
 
         <div className="relative mt-3">
@@ -76,27 +78,32 @@ export function HistorySidebar({ history, stats, activeId, onSelect, onDelete }:
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search history"
             aria-label="Search past topics"
-            className="h-9 pl-9"
+            className="h-11 rounded-full pl-9"
           />
         </div>
 
         {filtered.length === 0 ? (
-          <p className="mt-4 text-sm text-muted-foreground">
-            {history.length === 0 ? "Topics you study are saved here on this device." : "No matches."}
-          </p>
+          history.length === 0 ? (
+            <div className="mt-4 text-center">
+              <SmartImage {...IMAGES.empty} className="mx-auto h-28 w-full rounded-2xl" />
+              <p className="mt-3 text-sm text-muted-foreground">Your journal is empty. Topics you study are saved here on this device.</p>
+            </div>
+          ) : (
+            <p className="mt-4 text-sm text-muted-foreground">No matches.</p>
+          )
         ) : (
           <ul className="mt-3 space-y-1">
             {filtered.map((entry) => (
               <li
                 key={entry.id}
-                className={`group flex items-center gap-1 rounded-lg px-1 transition-colors ${
-                  entry.id === activeId ? "bg-muted" : "hover:bg-muted/60"
+                className={`group flex items-center gap-1 rounded-2xl px-1 transition-colors ${
+                  entry.id === activeId ? "accent-left border-l-primary bg-secondary" : "hover:bg-muted"
                 }`}
               >
                 <button
                   type="button"
                   onClick={() => onSelect(entry)}
-                  className="focus-visible:ring-ring flex-1 rounded-lg px-2 py-2 text-left focus-visible:ring-2 focus-visible:outline-none"
+                  className="focus-visible:ring-ring min-h-11 flex-1 rounded-2xl px-2 py-2 text-left focus-visible:ring-2 focus-visible:outline-none"
                 >
                   <span className="block truncate text-sm font-medium">{entry.topic}</span>
                   <span className="block text-xs text-muted-foreground">{entry.request.level}</span>
@@ -104,7 +111,7 @@ export function HistorySidebar({ history, stats, activeId, onSelect, onDelete }:
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="size-8 opacity-60 hover:opacity-100"
+                  className="opacity-70 hover:opacity-100"
                   onClick={() => onDelete(entry.id)}
                   aria-label={`Delete ${entry.topic} from history`}
                 >
