@@ -3,6 +3,7 @@
 An AI-powered study and tech explainer. Enter any concept, pick your level and analogy style, and get a full
 learning pack: TL;DR, step-by-step explanation, analogy, optional code example, misconceptions, takeaways, a
 5-question quiz, flashcards and a context-aware follow-up chat.
+- Live link: https://screenshot-perfect-clone-271.lovable.app/
 
 ## Features
 
