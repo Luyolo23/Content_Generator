@@ -1,5 +1,5 @@
 import { ImageOff } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -18,6 +18,14 @@ interface SmartImageProps {
 export function SmartImage({ src, alt, width, height, className, imgClassName, fallbackIcon, eager }: SmartImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const image = imageRef.current;
+    if (!image?.complete) return;
+    if (image.naturalWidth > 0) setLoaded(true);
+    else setFailed(true);
+  }, [src]);
 
   return (
     <div className={cn("bg-fallback relative overflow-hidden", className)}>
@@ -27,6 +35,7 @@ export function SmartImage({ src, alt, width, height, className, imgClassName, f
         </div>
       ) : (
         <img
+          ref={imageRef}
           src={src}
           alt={alt}
           width={width}
