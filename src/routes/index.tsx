@@ -156,28 +156,17 @@ function HomePage() {
               </div>
             </div>
 
-            <div className="relative hidden h-[520px] lg:block" aria-hidden={false}>
-              <span className="absolute top-6 right-2 size-40 rounded-[60%_40%_55%_45%] bg-teal/30 blur-2xl" aria-hidden />
-              <span className="absolute bottom-10 left-0 size-44 rounded-[45%_55%_40%_60%] bg-primary/20 blur-2xl" aria-hidden />
-              <SmartImage
-                {...IMAGES.hero.notebook}
-                eager
-                className="animate-float absolute top-0 right-0 h-72 w-64 rounded-[2rem] shadow-lift [--r:3deg]"
-              />
+            <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+              <div className="absolute -inset-3 translate-x-3 translate-y-3 rounded-[2rem] border border-primary/20 bg-primary/10" aria-hidden />
               <SmartImage
                 {...IMAGES.hero.studying}
                 eager
-                className="animate-float absolute top-36 left-0 h-80 w-60 rounded-[2rem] shadow-lift [--r:-3deg] [animation-delay:1.5s]"
+                className="relative aspect-[6/7] w-full rounded-[2rem] border-4 border-card shadow-lift"
+                imgClassName="object-cover object-center"
               />
-              <SmartImage
-                {...IMAGES.hero.plants}
-                className="animate-float absolute right-10 bottom-0 h-44 w-48 rounded-[50%_50%_2rem_2rem] shadow-lift [animation-delay:3s]"
-              />
-            </div>
-            <div className="grid grid-cols-3 gap-3 lg:hidden">
-              {[IMAGES.hero.notebook, IMAGES.hero.studying, IMAGES.hero.plants].map((img) => (
-                <SmartImage key={img.src} {...img} className="aspect-[3/4] rounded-3xl shadow-soft" />
-              ))}
+              <span className="absolute right-5 bottom-5 rounded-full bg-background/90 px-4 py-2 text-sm font-medium text-foreground shadow-soft backdrop-blur">
+                Learn at your own pace
+              </span>
             </div>
           </section>
         ) : null}

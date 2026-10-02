@@ -20,12 +20,6 @@ export function SiteFooter() {
           >
             <Github className="size-4" aria-hidden /> GitHub
           </a>
-          <span>
-            Photos from{" "}
-            <a href="https://unsplash.com" target="_blank" rel="noreferrer noopener" className="underline underline-offset-2 hover:text-foreground">
-              Unsplash
-            </a>
-          </span>
         </div>
       </div>
     </footer>

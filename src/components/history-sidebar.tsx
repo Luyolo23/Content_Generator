@@ -85,7 +85,7 @@ export function HistorySidebar({ history, stats, activeId, onSelect, onDelete }:
         {filtered.length === 0 ? (
           history.length === 0 ? (
             <div className="mt-4 text-center">
-              <SmartImage {...IMAGES.empty} className="mx-auto h-28 w-full rounded-2xl" />
+              <SmartImage {...IMAGES.empty} className="mx-auto aspect-[16/7] w-full rounded-2xl" imgClassName="object-cover object-center" />
               <p className="mt-3 text-sm text-muted-foreground">Your journal is empty. Topics you study are saved here on this device.</p>
             </div>
           ) : (

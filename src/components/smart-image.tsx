@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 interface SmartImageProps {
   src: string;
   alt: string;
+  width?: number;
+  height?: number;
   className?: string;
   imgClassName?: string;
   fallbackIcon?: ReactNode;
@@ -13,7 +15,7 @@ interface SmartImageProps {
 }
 
 /** Lazy image with a gradient placeholder and a graceful gradient+icon fallback on error. */
-export function SmartImage({ src, alt, className, imgClassName, fallbackIcon, eager }: SmartImageProps) {
+export function SmartImage({ src, alt, width, height, className, imgClassName, fallbackIcon, eager }: SmartImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -27,6 +29,8 @@ export function SmartImage({ src, alt, className, imgClassName, fallbackIcon, ea
         <img
           src={src}
           alt={alt}
+          width={width}
+          height={height}
           loading={eager ? "eager" : "lazy"}
           decoding="async"
           onLoad={() => setLoaded(true)}
