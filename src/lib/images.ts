@@ -1,33 +1,34 @@
-/**
- * All photography in one place so it's easy to swap.
- * Every image is rendered through <SmartImage>, which falls back to a
- * palette gradient + icon if a URL ever fails to load.
- */
+import studyPortrait from "@/assets/concept-coach-study.jpg";
+import studyBooks from "@/assets/concept-coach-books.jpg";
+
+/** All photography is bundled with the app so the learning UI never shows remote-image placeholders. */
 
 export type TopicCategory = "tech" | "science" | "finance" | "humanities" | "general";
 
 export interface AppImage {
   src: string;
   alt: string;
+  width: number;
+  height: number;
 }
-
-const u = (id: string, w = 1200) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
 
 export const IMAGES = {
   hero: {
-    notebook: { src: u("photo-1517842645767-c639042777db", 800), alt: "Open notebook beside a cup of coffee" },
-    studying: { src: u("photo-1434030216411-0b793f4b4173", 800), alt: "Person writing notes at a desk" },
-    plants: { src: u("photo-1466692476868-aef1dfb1e735", 600), alt: "Green leafy plants in soft light" },
+    studying: {
+      src: studyPortrait,
+      alt: "Student writing notes beside a laptop at a sunlit desk",
+      width: 1200,
+      height: 1408,
+    },
   },
   banners: {
-    tech: { src: u("photo-1555066931-4365d14bab8c"), alt: "Code on a laptop screen" },
-    science: { src: u("photo-1532094349884-543bc11b234d"), alt: "Science lab glassware" },
-    finance: { src: u("photo-1554224155-6726b3ff858f"), alt: "Calculator and financial notes" },
-    humanities: { src: u("photo-1507842217343-583bb7270b66"), alt: "Shelves of books in a library" },
-    general: { src: u("photo-1497633762265-9d179a990aa6"), alt: "Stack of books on a table" },
+    tech: { src: studyBooks, alt: "Study notes, books and a laptop on a desk", width: 1600, height: 912 },
+    science: { src: studyBooks, alt: "Open study notebook and reference books", width: 1600, height: 912 },
+    finance: { src: studyBooks, alt: "Study notes and books in warm natural light", width: 1600, height: 912 },
+    humanities: { src: studyBooks, alt: "Open notebook beside stacked books", width: 1600, height: 912 },
+    general: { src: studyBooks, alt: "Open notebook and books ready for study", width: 1600, height: 912 },
   } satisfies Record<TopicCategory, AppImage>,
-  empty: { src: u("photo-1456513080510-7bf3a84b82f8", 600), alt: "Notebook and pencils ready for study" },
+  empty: { src: studyBooks, alt: "Open notebook and books ready for study", width: 1600, height: 912 },
 } as const;
 
 const KEYWORDS: Record<Exclude<TopicCategory, "general">, string[]> = {
